@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Otter Spotter</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+      <style>
+        #menu {
+          position: absolute;
+          background: #fff;
+          padding: 10px;
+          font-family: 'Open Sans', sans-serif;
+        }
+      </style>
+  
+    <div id='map'></div>
+    <div id='menu'>
+      <input id='cjmlgjcbp2k5i2qpjkxv48d5x' type='radio' name='rtoggle' value='basemap'>
+      <label for='basemap'>basemap</label>
+      <input id='cjmlieko80aos2rmxarfxzorz' type='radio' name='rtoggle' value='satellite'>
+      <label for='satellite'>satellite</label>
+    </div>
+
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWFyZW5hYiIsImEiOiJjajV2ajVyZXUwMnN3MzNwNzR3Ynk2cjIyIn0.sI-ynx23EEdpZFbEDu6qjA'; // replace this with your access token
+    
+    // Set bounds to Zanzibar
+    //var bounds = [
+    //[38.111572265625, -6.986406835762532], // Southwest coordinates
+    //[40.484619140625, -5.244127581489528]  // Northeast coordinates
+    //];
+
+    // Initialize map
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/marenab/cjmlgjcbp2k5i2qpjkxv48d5x?fresh=true',
+      center: [-121.500,38.304],
+      zoom: 6.8,
+      //maxBounds: bounds // Sets bounds as max
+    });
+
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+
+  function mapReset() {
+    
+  }
+
+  map.on('click', function(e) {
+    mapReset();
+
+    // Add pop-up
+    var features = map.queryRenderedFeatures(e.point, {
+        layers: ['otters'] // replace this with the name of the layer
+      });
+      if (!features.length) {
+        return;
+      }
+      var feature = features[0];
+      var popup = new mapboxgl.Popup({ offset: [0, -15] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML('<h3>' + feature.properties.Description + '</h3>')
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
+      });
+   
+
+// Toggle styles
+    var layerList = document.getElementById('menu');
+    var inputs = layerList.getElementsByTagName('input');
+
+    function switchLayer(layer) {
+      var layerId = layer.target.id;
+      map.setStyle('mapbox://styles/marenab/' + layerId);
+    }
+
+    for (var i = 0; i < inputs.length; i++) {
+        inputs[i].onclick = switchLayer;
+      }
+
+
+        // Change the cursor to a pointer when the mouse is over the pitches layer.
+    map.on('mouseenter', 'otters', function () {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'otters', function () {
+        map.getCanvas().style.cursor = '';
+    });
+
+    // Add popups
+    //map.on('click', function(e) {
+      //var pitches = map.queryRenderedFeatures(e.point, { layers: ['football-pitch'] // name of the layer
+      //});
+
+        //if (!pitches.length) {
+          //return;
+        //}
+
+      //var pitch = pitches[0];
+
+      //var popup = new mapboxgl.Popup({ offset: [0, -15] })
+      //.setLngLat(pitch.geometry.coordinates)
+      //.setHTML('<h3>' + pitch.properties.TYPE + '</h3>')
+      //.setLngLat(pitch.geometry.coordinates)
+      //.addTo(map);
+    //});
+  //});
+
+    </script>
+</body>
+</html>
